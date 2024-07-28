@@ -32,14 +32,14 @@ io.on("connection", (socket) => {
 app.post('/sendPayload', async (req, res) => {
     const {userId, payload} = req.body;
     if(!userId || !payload) {
-        res.status(400).send('invalid request');
+        return res.status(400).send('invalid request');
     };
     const socketId = await redisCache.get(userId);
     if(socketId) {
         io.to(socketId).emit('submissionPayloadResponse', payload);
-        res.send("Payload sent successfully");
+        return res.send("Payload sent successfully");
     }else {
-        res.status(404).send('User not connected');
+        return res.status(404).send("User not connected");
     }
 })
 
